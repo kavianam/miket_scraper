@@ -10,9 +10,18 @@ class MiketSpider(scrapy.Spider):
 
     name = "miket"
 
-    start_urls = [
-        "https://myket.ir/list/applicationPackage/page?listKey=best-free-android-games&page=0"
-    ]
+    pages = (
+        'best-free-android-games',
+        'most-popular-iranian-android-games',
+        'best-online-games-for-android',
+        'best-offline-games-for-android',
+        'best-strategy-games-for-android',
+        'best-android-puzzle-games',
+        'best-android-card-battle-games'
+    )
+    base_url = "https://myket.ir/list/applicationPackage/page"
+    start_urls = [f'https://myket.ir/list/applicationPackage/page?listKey={page}&page=0' for page in pages]
+
 
     def parse(self, response: Response, **kwargs: Any):
 
