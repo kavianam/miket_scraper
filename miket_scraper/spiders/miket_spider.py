@@ -36,9 +36,10 @@ class MiketSpider(scrapy.Spider):
             print('-' * 50)
             yield scrapy.Request(link, callback=self.parse_each_game, errback=self.handle_error, cb_kwargs={'name': name})
 
+        # fetching next page
+        base_page = response.url.split('page=')[0]
         current_page = int(response.url.split('page=')[-1])
-        next_page = current_page + 1
-        next_page_url = f"https://myket.ir/list/applicationPackage/page?listKey=best-free-android-games&page={next_page}"
+        next_page_url = f"{base_page}&page={current_page + 1}"
         yield scrapy.Request(next_page_url, callback=self.parse, errback=self.handle_error)
 
     def handle_error(self, failure):
