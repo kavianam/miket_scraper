@@ -82,6 +82,12 @@ class MiketSpider(scrapy.Spider):
         print(f'{kind=}')
         print(f'{category=}')
         print(f'{creator=}')
+
+        # ratings:
+        ratings_percentage = response.xpath("//div[@class='ratesProgress']/div/@style").getall()
+        print(ratings_percentage)
+        ratings_percentage = [int(rating.split(':')[1].replace('%', '')) for rating in ratings_percentage]
+        print(f'{ratings_percentage=}')
         print('=' * 50)
 
 
