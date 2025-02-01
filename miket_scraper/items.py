@@ -6,7 +6,16 @@
 import scrapy
 
 
-class MiketScraperItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class MiketItem(scrapy.Item):
+    name = scrapy.Field()
+    image_url = scrapy.Field()
+    version = scrapy.Field()
+    last_update = scrapy.Field()
+    num_download = scrapy.Field()
+    rating = scrapy.Field()
+    num_feedback = scrapy.Field()
+    size = scrapy.Field()
+    kind = scrapy.Field()
+    category = scrapy.Field()
+    creator = scrapy.Field()
+    ratings_percentage = scrapy.Field()
