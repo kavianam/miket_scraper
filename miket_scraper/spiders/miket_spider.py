@@ -20,7 +20,7 @@ class MiketSpider(scrapy.Spider):
         'best-android-card-battle-games'
     )
     base_url = "https://myket.ir/list/applicationPackage/page"
-    start_urls = [f'https://myket.ir/list/applicationPackage/page?listKey={page}&page=0' for page in pages]
+    start_urls = [f'https://myket.ir/list/page?listKey={page}&page=0' for page in pages]
 
 
     def parse(self, response: Response, **kwargs: Any):
@@ -31,13 +31,13 @@ class MiketSpider(scrapy.Spider):
 
         print('=' * 50)
         print(f"Scraping: {response.url}")
-        games = response.css(".listApps a")
+        games = response.css(".list-app a")
 
         for game in games:
-            link = game.attrib['href']
+            link = 'https://myket.ir' + game.attrib['href']
             name = game.attrib['title']  # or game.xpath("div[@class='appName']/text()").get()
-            title_fa = game.xpath("div[@class='appGroup']//text()").get()  # not all have - it is a category
-            image_url = game.xpath('picture/source').attrib['srcset']
+            title_fa = game.xpath("p[@class='app-group']//text()").get()  # not all have - it is a category
+            image_url = game.xpath('img/@src').get()
             print(f'{link=}')
             print(f'{name=}')
             print(f'{title_fa=}')
@@ -94,7 +94,7 @@ class MiketSpider(scrapy.Spider):
         print(f'{creator=}')
 
         # ratings:
-        ratings_percentage = response.xpath("//div[@class='ratesProgress']/div/@style").getall()
+        ratings_percentage = response.xpath("//div[@class='rating-wrapper']//div[@class='progress']/span/@style").getall()
         print(ratings_percentage)
         ratings_percentage = [int(rating.split(':')[1].replace('%', '')) for rating in ratings_percentage]
         print(f'{ratings_percentage=}')
