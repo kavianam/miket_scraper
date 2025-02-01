@@ -5,6 +5,8 @@ import jdatetime
 import scrapy
 from scrapy.http import Response
 
+from miket_scraper.items import MiketItem
+
 
 class MiketSpider(scrapy.Spider):
 
@@ -99,6 +101,23 @@ class MiketSpider(scrapy.Spider):
         ratings_percentage = [int(rating.split(':')[1].replace('%', '')) for rating in ratings_percentage]
         print(f'{ratings_percentage=}')
         print('=' * 50)
+
+        item = MiketItem()
+        item['name'] = name
+        item['image_url'] = image_url
+        item['version'] = version
+        item['last_update'] = last_update
+        item['num_download'] = num_download
+        item['rating'] = rating
+        item['num_feedback'] = num_feedback
+        item['size'] = size
+        item['kind'] = kind
+        item['category'] = category
+        item['creator'] = creator
+        item['ratings_percentage'] = ratings_percentage
+        print(item)
+
+        yield item
 
 
     @staticmethod
