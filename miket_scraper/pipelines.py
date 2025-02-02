@@ -7,7 +7,17 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 
+import json
+
 
 class MiketScraperPipeline:
+    def open_spider(self, spider):
+        self.f = open('items.csv', 'w')
+
+    def close_spider(self, spider):
+        self.f.close()
+
     def process_item(self, item, spider):
+        json.dump(ItemAdapter(item).asdict(), self.f)
+        self.f.write('\n')
         return item

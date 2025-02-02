@@ -106,7 +106,7 @@ class MiketSpider(scrapy.Spider):
         item['name'] = name
         item['image_url'] = image_url
         item['version'] = version
-        item['last_update'] = last_update
+        item['last_update'] = last_update.strftime("%Y-%m-%d")
         item['num_download'] = num_download
         item['rating'] = rating
         item['num_feedback'] = num_feedback
