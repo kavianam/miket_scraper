@@ -7,17 +7,19 @@
 # useful for handling different item types with a single interface
 from itemadapter import ItemAdapter
 
-import json
+from scrapy.exporters import CsvItemExporter
 
 
 class MiketScraperPipeline:
     def open_spider(self, spider):
-        self.f = open('items.csv', 'w')
+        self.file = open('output.csv', 'wb')
+        self.exporter = CsvItemExporter(self.file, encoding='utf-8')
+        self.exporter.start_exporting()
 
     def close_spider(self, spider):
-        self.f.close()
+        self.exporter.finish_exporting()
+        self.file.close()
 
     def process_item(self, item, spider):
-        json.dump(ItemAdapter(item).asdict(), self.f)
-        self.f.write('\n')
+        self.exporter.export_item(item)
         return item
