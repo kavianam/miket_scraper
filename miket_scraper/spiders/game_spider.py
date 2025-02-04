@@ -11,7 +11,10 @@ from miket_scraper.items import MiketItem
 class MiketSpider(scrapy.Spider):
 
     name = "game"
-    start_urls = ['https://myket.ir/games']
+    start_urls = [
+        'https://myket.ir/apps',
+        'https://myket.ir/games',
+    ]
 
 
     def parse(self, response: Response, **kwargs: Any):
@@ -101,35 +104,23 @@ class MiketSpider(scrapy.Spider):
                 english_key = persian_to_english[persian_key]
                 value = features_table[i + 1]
 
-        if len(features_value) < 9:
-            rating = -1
-            num_feedback = -1
-            size = self.convert_persian_memory_to_bytes(self.convert_persian_to_english_numbers(features_value[3]))
-            kind = features_value[4].strip()
-            category = features_value[5].strip()
-            creator = features_value[6].strip()
-        else:
-            rating = float(self.convert_persian_to_english_numbers(features_value[3]))
-            num_feedback = int(self.convert_persian_to_english_numbers(features_value[4]).replace(',', ''))
-            size = self.convert_persian_memory_to_bytes(self.convert_persian_to_english_numbers(features_value[5]))
-            kind = features_value[6].strip()
-            category = features_value[7].strip()
-            creator = features_value[8].strip()
                 # Apply processing functions for the given key
                 results = value
                 for func in processing_functions.get(english_key, []):
                     results = func(results)  # Call the function
 
                 features[english_key] = results
+            else:
+                with open('non_features.txt', 'a+') as f:
+                    f.write(f'url: {response.url} - name: {name} - non feature: {persian_key}\n')
 
         ratings_percentage = response.xpath("//div[@class='rating-wrapper']//div[@class='progress']/span/@style").getall()
         print(ratings_percentage)
         if ratings_percentage:
             rating_1, rating_2, rating_3, rating_4, rating_5 = (int(rating.split(':')[1].replace('%', '')) for rating in ratings_percentage)
         else:
-            ratings_percentage = []
-        print('=' * 50)
             rating_1 = rating_2 = rating_3 = rating_4 = rating_5 = None
+        # print('=' * 50)
 
         item = MiketItem()
         item['name'] = name
