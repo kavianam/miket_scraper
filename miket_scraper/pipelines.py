@@ -10,7 +10,7 @@ from itemadapter import ItemAdapter
 from scrapy.exporters import CsvItemExporter
 
 
-class MiketScraperPipeline:
+class CSVPipeline:
     def open_spider(self, spider):
         self.file = open('output.csv', 'wb')
         self.exporter = CsvItemExporter(self.file, encoding='utf-8')
