@@ -26,26 +26,24 @@ class MiketSpider(scrapy.Spider):
         lists = response.css('.category-list .recommended-header a::attr(href)').getall()
         for list in lists:
             url = 'https://myket.ir' + list
-            print(url)
             yield scrapy.Request(url, callback=self.parse_list, errback=self.handle_error)
 
-        print('-' * 50)
+        # print('-' * 50)
 
         categories = response.css('.category-home > a::attr(href)').getall()
         for category in categories:
             url = 'https://myket.ir' + category
-            print(url)
             yield scrapy.Request(url, callback=self.parse, errback=self.handle_error)
 
-        print('-' * 50)
+        # print('-' * 50)
 
     def parse_list(self, response: Response, **kwargs: Any):
         if response.text == '""':
             self.logger.warning(f"Page is empty: {response.url}")
             return
 
-        print('=' * 50)
-        print(f"Scraping: {response.url}")
+        # print('=' * 50)
+        # print(f"Scraping: {response.url}")
         games = response.css(".list-app a")
 
         for game in games:
@@ -53,11 +51,11 @@ class MiketSpider(scrapy.Spider):
             name = game.attrib['title']  # or game.xpath("div[@class='appName']/text()").get()
             title_fa = game.xpath("p[@class='app-group']//text()").get()  # not all have - it is a category
             image_url = game.xpath('img/@src').get()
-            print(f'{link=}')
-            print(f'{name=}')
-            print(f'{title_fa=}')
-            print(f'{image_url=}')
-            print('-' * 50)
+            # print(f'{link=}')
+            # print(f'{name=}')
+            # print(f'{title_fa=}')
+            # print(f'{image_url=}')
+            # print('-' * 50)
             yield scrapy.Request(link, callback=self.parse_each_game, errback=self.handle_error, cb_kwargs={'name': name})
 
         # fetching next page
@@ -70,8 +68,8 @@ class MiketSpider(scrapy.Spider):
         name = kwargs['name']
         image_url = response.xpath("//div[@class='appImage']/img/@src").get()
 
-        print(f'{image_url=}')
-        print(f'{name=}')
+        # print(f'{image_url=}')
+        # print(f'{name=}')
 
         features_table = response.xpath("//div[@class='tbl-app-detail']/table//td//text()").getall()
 
@@ -115,7 +113,7 @@ class MiketSpider(scrapy.Spider):
                     f.write(f'url: {response.url} - name: {name} - non feature: {persian_key}\n')
 
         ratings_percentage = response.xpath("//div[@class='rating-wrapper']//div[@class='progress']/span/@style").getall()
-        print(ratings_percentage)
+        # print(ratings_percentage)
         if ratings_percentage:
             rating_1, rating_2, rating_3, rating_4, rating_5 = (int(rating.split(':')[1].replace('%', '')) for rating in ratings_percentage)
         else:
