@@ -71,12 +71,35 @@ class MiketSpider(scrapy.Spider):
         print(f'{name=}')
 
         features_table = response.xpath("//div[@class='tbl-app-detail']/table//td//text()").getall()
-        features_value = [text for index, text in enumerate(features_table) if index % 2 != 0]
-        print(features_value)
 
-        version = self.convert_persian_to_english_numbers(features_value[0])
-        last_update = self.convert_jalali_date_to_gregorian(self.convert_persian_to_english_numbers(features_value[1]))
-        num_download = self.convert_persian_words_to_english(self.convert_persian_to_english_numbers(features_value[2]))
+        persian_to_english = {
+            'نسخه': 'version',
+            'آخرین بروزرسانی': 'last_update',
+            'تعداد دانلود': 'num_download',
+            'امتیاز': 'rating',
+            'تعداد نظرات': 'num_feedback',
+            'حجم': 'size',
+            'نوع': 'kind',
+            'دسته‌بندی': 'category',
+            'سازنده': 'creator',
+            'قیمت': 'price',
+        }
+        processing_functions = {
+            'version': (self.convert_persian_to_english_numbers,),
+            'last_update': (self.convert_persian_to_english_numbers, self.convert_jalali_date_to_gregorian),
+            'num_download': (self.convert_persian_to_english_numbers, self.convert_persian_words_to_english),
+            'rating': (self.convert_persian_to_english_numbers, float),
+            'num_feedback': (self.convert_persian_to_english_numbers, lambda val: self.replace_chars(val, {',': ''})),
+            'size': (self.convert_persian_to_english_numbers, self.convert_persian_memory_to_bytes),
+            'price': (self.convert_persian_to_english_numbers, lambda val: self.replace_chars(val, {',': '', 'تومان': '', 'ریال': ''})),
+        }
+
+        features = {}
+        for i in range(0, len(features_table), 2):
+            persian_key = features_table[i]
+            if persian_key in persian_to_english:
+                english_key = persian_to_english[persian_key]
+                value = features_table[i + 1]
 
         if len(features_value) < 9:
             rating = -1
@@ -92,41 +115,35 @@ class MiketSpider(scrapy.Spider):
             kind = features_value[6].strip()
             category = features_value[7].strip()
             creator = features_value[8].strip()
+                # Apply processing functions for the given key
+                results = value
+                for func in processing_functions.get(english_key, []):
+                    results = func(results)  # Call the function
 
-        print(f'{version=}')
-        print(f'{last_update=}')
-        print(f'{num_download=}')
-        print(f'{rating=}')
-        print(f'{num_feedback=}')
-        print(f'{size=}')
-        print(f'{kind=}')
-        print(f'{category=}')
-        print(f'{creator=}')
+                features[english_key] = results
 
-        # ratings:
         ratings_percentage = response.xpath("//div[@class='rating-wrapper']//div[@class='progress']/span/@style").getall()
         print(ratings_percentage)
         if ratings_percentage:
-            ratings_percentage = [int(rating.split(':')[1].replace('%', '')) for rating in ratings_percentage]
-            print(f'{ratings_percentage=}')
+            rating_1, rating_2, rating_3, rating_4, rating_5 = (int(rating.split(':')[1].replace('%', '')) for rating in ratings_percentage)
         else:
             ratings_percentage = []
         print('=' * 50)
+            rating_1 = rating_2 = rating_3 = rating_4 = rating_5 = None
 
         item = MiketItem()
         item['name'] = name
+        item['url'] = response.url
         item['image_url'] = image_url
-        item['version'] = version
-        item['last_update'] = last_update.strftime("%Y-%m-%d")
-        item['num_download'] = num_download
-        item['rating'] = rating
-        item['num_feedback'] = num_feedback
-        item['size'] = size
-        item['kind'] = kind
-        item['category'] = category
-        item['creator'] = creator
-        item['ratings_percentage'] = ratings_percentage
+        item['rating_1'] = rating_1
+        item['rating_2'] = rating_2
+        item['rating_3'] = rating_3
+        item['rating_4'] = rating_4
+        item['rating_5'] = rating_5
+        for key, value in features.items():
+            item[key] = value
         print(item)
+        print('-' * 50)
 
         yield item
 
@@ -193,3 +210,9 @@ class MiketSpider(scrapy.Spider):
                 return int(number_value * unit_value)
 
         return
+
+    @staticmethod
+    def replace_chars(value: str, character_replacements: dict) -> str:
+        for old_char, new_char in character_replacements.items():
+            value = value.replace(old_char, new_char)
+        return value
