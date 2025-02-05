@@ -10,7 +10,8 @@ from miket_scraper.items import MiketItem
 
 class MiketSpider(scrapy.Spider):
 
-    name = "game"
+    name = "apps"
+
     start_urls = [
         'https://myket.ir/apps',
         'https://myket.ir/games',
