@@ -8,7 +8,7 @@ from scrapy.http import Response
 from miket_scraper.items import MiketItem
 
 
-class MiketSpider(scrapy.Spider):
+class AppsSpider(scrapy.Spider):
 
     name = "apps"
 
