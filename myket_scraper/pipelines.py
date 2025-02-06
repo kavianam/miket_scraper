@@ -30,7 +30,7 @@ class SQLitePipeline:
 
     def open_spider(self, spider):
         # Connect to the SQLite database or create it
-        self.connection = sqlite3.connect('mydatabase.db')
+        self.connection = sqlite3.connect('myket.db')
         self.cursor = self.connection.cursor()
         # Create a table if it doesn't exist
         self.cursor.execute('''
