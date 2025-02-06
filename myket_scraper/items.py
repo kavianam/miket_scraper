@@ -6,7 +6,7 @@
 import scrapy
 
 
-class MiketItem(scrapy.Item):
+class MyketItem(scrapy.Item):
     name = scrapy.Field()
     url = scrapy.Field()
     image_url = scrapy.Field()

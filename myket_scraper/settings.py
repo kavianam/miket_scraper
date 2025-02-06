@@ -1,4 +1,4 @@
-# Scrapy settings for miket_scraper project
+# Scrapy settings for myket_scraper project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -7,14 +7,14 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = "miket_scraper"
+BOT_NAME = "myket_scraper"
 
-SPIDER_MODULES = ["miket_scraper.spiders"]
-NEWSPIDER_MODULE = "miket_scraper.spiders"
+SPIDER_MODULES = ["myket_scraper.spiders"]
+NEWSPIDER_MODULE = "myket_scraper.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = "miket_scraper (+http://www.yourdomain.com)"
+#USER_AGENT = "myket_scraper (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -45,13 +45,13 @@ DOWNLOAD_DELAY = 1
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    "miket_scraper.middlewares.MiketScraperSpiderMiddleware": 543,
+#    "myket_scraper.middlewares.MyketScraperSpiderMiddleware": 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    "miket_scraper.middlewares.MiketScraperDownloaderMiddleware": 543,
+#    "myket_scraper.middlewares.MyketScraperDownloaderMiddleware": 543,
 #}
 
 # Enable or disable extensions
@@ -63,8 +63,8 @@ DOWNLOAD_DELAY = 1
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   # "miket_scraper.pipelines.CSVPipeline": 300,
-   "miket_scraper.pipelines.SQLitePipeline": 300,
+   # "myket_scraper.pipelines.CSVPipeline": 300,
+   "myket_scraper.pipelines.SQLitePipeline": 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

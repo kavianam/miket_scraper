@@ -5,7 +5,7 @@ import jdatetime
 import scrapy
 from scrapy.http import Response
 
-from miket_scraper.items import MiketItem
+from myket_scraper.items import MyketItem
 
 
 class AppsSpider(scrapy.Spider):
@@ -102,7 +102,7 @@ class AppsSpider(scrapy.Spider):
         else:
             rating_1 = rating_2 = rating_3 = rating_4 = rating_5 = None
 
-        item = MiketItem()
+        item = MyketItem()
         item['name'] = name
         item['url'] = response.url
         item['image_url'] = image_url
