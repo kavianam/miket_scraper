@@ -63,6 +63,7 @@ class SQLitePipeline:
         self.connection.close()
 
     def process_item(self, item, spider):
+        item = ItemAdapter(item)
         # Check if item already exists in the database
         self.cursor.execute("SELECT name FROM app WHERE name = ?", (item['name'],))
         result = self.cursor.fetchone()
